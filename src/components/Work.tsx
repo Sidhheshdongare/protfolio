@@ -1,29 +1,31 @@
+import { useLayoutEffect } from "react";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(ScrollTrigger);
 
 const Work = () => {
-  useGSAP(() => {
+  useLayoutEffect(() => {
     let translateX: number = 0;
+
     function setTranslateX() {
-      const box = document.getElementsByClassName("work-box");
-      const rectLeft = document
-        .querySelector(".work-container")!
-        .getBoundingClientRect().left;
-      const rect = box[0].getBoundingClientRect();
-      const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
-      let padding: number =
-        parseInt(window.getComputedStyle(box[0]).padding) / 2;
-      translateX = rect.width * box.length - (rectLeft + parentWidth) + padding;
+      const boxes = document.getElementsByClassName("work-box");
+      const container = document.querySelector(".work-container");
+      if (!boxes.length || !container) return;
+
+      const rectLeft = container.getBoundingClientRect().left;
+      const rect = boxes[0].getBoundingClientRect();
+      const parentWidth = boxes[0].parentElement!.getBoundingClientRect().width;
+      const padding = parseInt(window.getComputedStyle(boxes[0]).padding) / 2 || 0;
+
+      translateX = rect.width * boxes.length - (rectLeft + parentWidth) + padding;
     }
 
     setTranslateX();
 
-    let timeline = gsap.timeline({
+    const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: ".work-section",
         start: "top top",
@@ -40,7 +42,13 @@ const Work = () => {
       duration: 40,
       delay: 0.2,
     });
+
+    // Cleanup
+    return () => {
+      ScrollTrigger.getById("work")?.kill();
+    };
   }, []);
+
   return (
     <div className="work-section" id="work">
       <div className="work-container section-container">
@@ -53,7 +61,6 @@ const Work = () => {
               <div className="work-info">
                 <div className="work-title">
                   <h3>0{index + 1}</h3>
-
                   <div>
                     <h4>Project Name</h4>
                     <p>Category</p>
