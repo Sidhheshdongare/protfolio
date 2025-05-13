@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
+import ScrollSmoother from './vendor/ScrollSmoother.min.js';
 
 export function setCharTimeline(
   character: THREE.Object3D<THREE.Object3DEventMap> | null,
