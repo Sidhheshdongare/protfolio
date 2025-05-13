@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import gsap from "gsap";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 
 export function setCharTimeline(
   character: THREE.Object3D<THREE.Object3DEventMap> | null,
