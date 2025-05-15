@@ -1,4 +1,10 @@
-import { lazy, PropsWithChildren, Suspense, useEffect, useState } from "react";
+import {
+  lazy,
+  PropsWithChildren,
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -14,7 +20,7 @@ const TechStack = lazy(() => import("./TechStack"));
 
 const MainContainer = ({ children }: PropsWithChildren) => {
   const [isDesktopView, setIsDesktopView] = useState<boolean>(
-    window.innerWidth > 1024
+    typeof window !== "undefined" ? window.innerWidth > 1024 : false
   );
 
   useEffect(() => {
@@ -27,6 +33,21 @@ const MainContainer = ({ children }: PropsWithChildren) => {
     return () => {
       window.removeEventListener("resize", resizeHandler);
     };
+  }, []);
+
+  // 👇 ScrollSmoother setup only runs on desktop view
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.ScrollSmoother &&
+      isDesktopView
+    ) {
+      window.ScrollSmoother.create({
+        smooth: 1.5,
+        effects: true,
+        smoothTouch: false,
+      });
+    }
   }, [isDesktopView]);
 
   return (
@@ -44,7 +65,7 @@ const MainContainer = ({ children }: PropsWithChildren) => {
             <Career />
             <Work />
             {isDesktopView && (
-              <Suspense fallback={<div>Loading....</div>}>
+              <Suspense fallback={<div>Loading...</div>}>
                 <TechStack />
               </Suspense>
             )}
