@@ -1,3 +1,7 @@
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+import gsap from "gsap";
+
+gsap.registerPlugin(ScrollSmoother);
 import {
   lazy,
   PropsWithChildren,
